@@ -8,24 +8,26 @@ import Info from "./Info";
 var KEY = "56b0d5a85804824c81150e1595caf58b";
 
 class App extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
       input: "",
-      json: {}
+      json: {},
+      intervalBeforeRequest : 1500,
+      lockRequest: false
     }
   }
 
   componentWillMount() {
     this.getDataFromApiWillMount();
   }
-
   getDataFromApiWillMount = () => {
     axios.get(`http://api.openweathermap.org/data/2.5/weather?q=London&appid=${KEY}`)
       .then((response) => {
-        // console.log(response);
+        console.log(response);
         this.setState({ json: response }, () => {
-          // console.log("willount :",this.state.data)
+          console.log("willount :", this.state.data)
         })
       })
       .catch((error) => {
@@ -36,7 +38,8 @@ class App extends Component {
   getDataFromApi = () => {
     axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.input}&appid=${KEY}`)
       .then((response) => {
-        // console.log(response);
+        console.log(response);
+
         this.setState({ json: response, error: "" })
       })
       .catch((error) => {
@@ -46,15 +49,20 @@ class App extends Component {
   }
 
   getInput = (event) => {
-    this.setState({ input: event.target.value })
+    this.setState({ input: event.target.value });
+    if(!this.state.lockRequest){
+      this.setState({lockRequest : true});
+      setTimeout(() => {
+        this.btnSearch()
+      }, this.state.intervalBeforeRequest)
+    }
   }
 
   btnSearch = (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     this.getDataFromApi();
-    this.setState({ input: "" })
+    this.setState({ input: "", lockRequest : false })
   }
-
 
   render() {
     const renderInfo = () => {
