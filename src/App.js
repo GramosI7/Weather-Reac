@@ -23,7 +23,7 @@ class App extends Component {
     this.getDataFromApiWillMount();
   }
   getDataFromApiWillMount = () => {
-    axios.get(`http://api.openweathermap.org/data/2.5/weather?q=London&appid=${KEY}`)
+    axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.input === "" ? "London" : this.state.input}&appid=${KEY}`)
       .then((response) => {
         console.log(response);
         this.setState({ json: response }, () => {
@@ -35,18 +35,18 @@ class App extends Component {
       });
   }
 
-  getDataFromApi = () => {
-    axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.input}&appid=${KEY}`)
-      .then((response) => {
-        console.log(response);
+  // getDataFromApi = () => {
+  //   axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.input}&appid=${KEY}`)
+  //     .then((response) => {
+  //       console.log(response);
 
-        this.setState({ json: response, error: "" })
-      })
-      .catch((error) => {
-        console.log(error);
-        this.setState({ error: "Aucun résultat !" })
-      });
-  }
+  //       this.setState({ json: response, error: "" })
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       this.setState({ error: "Aucun résultat !" })
+  //     });
+  // }
 
   getInput = (event) => {
     this.setState({ input: event.target.value });
@@ -60,7 +60,7 @@ class App extends Component {
 
   btnSearch = (event) => {
     // event.preventDefault();
-    this.getDataFromApi();
+    this.getDataFromApiWillMount();
     this.setState({ input: "", lockRequest : false })
   }
 
